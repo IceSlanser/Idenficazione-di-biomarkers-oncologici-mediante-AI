@@ -5,5 +5,5 @@ import pandas as pd
 #   - path: csv's location
 #   - nrows: (default all) rows to be loaded
 #   - skiprows: (default none) rows to be skipped at the beginning
-def load_csv(path, nrows=None, skiprows=None):
+def load_csv(path:str, nrows:int=None, skiprows:int=None) -> pd.DataFrame:
     return pd.read_csv(path, nrows=nrows, skiprows=skiprows)

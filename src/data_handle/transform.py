@@ -1,10 +1,13 @@
+import pandas as pd
+
 # Prepare the dataframe to be processed
-def adapt_dataframe(dataframe, type_dataframe):
+def adapt_dataframe(dataframe:pd.DataFrame, type_dataframe:pd.DataFrame) -> pd.DataFrame:
     # Remove unnecessary rows from the dataframe
     df_filtered = dataframe[~dataframe['name1'].isin(['sample_type', 'sample_site'])]
 
     # Merge the two columns referring at the same gene
-    df_filtered.loc[:, 'gene'] = df_filtered['name1'] + '_' + ['name2']
+    df_filtered = df_filtered.copy()
+    df_filtered['gene'] = df_filtered['name1'] + '_' + df_filtered['name2']
 
     # Pivot the df to have unique 'sample_id' as rows and 'gene' as columns
     # reset_index() transforms 'sample_id' in a column
@@ -15,3 +18,17 @@ def adapt_dataframe(dataframe, type_dataframe):
     df_adapted = df_pivot.merge(type_dataframe[['sample_id', 'sample_status']], on='sample_id', how='left')
 
     return df_adapted
+
+# Rows and columns that do not reach the given thresholds will be removed
+def optimize_missing_data(dataframe: pd.DataFrame, row_threshold: float, column_threshold: float) -> pd.DataFrame:
+    # Check if the thresholds are given as percentages (greater than 1)
+    if row_threshold > 1:
+        row_threshold = row_threshold / 100
+    if column_threshold > 1:
+        column_threshold = column_threshold / 100
+
+    # Convert to int because thresh expects an integer
+    dataframe = dataframe.dropna(thresh=int(len(dataframe.columns) * column_threshold), axis=0)
+    dataframe = dataframe.dropna(thresh=int(len(dataframe) * row_threshold), axis=1)
+
+    return dataframe
