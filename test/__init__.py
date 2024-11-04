@@ -1,1 +1,1 @@
-from src.data_handle import load
+from src.handler import load
