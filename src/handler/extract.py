@@ -8,7 +8,7 @@ def extract_type(dataframe: pd.DataFrame) -> pd.DataFrame:
     type_df = dataframe[dataframe['name1'] == 'sample_type'][['sample_id', 'value']]
 
     # Lambda function: map 'value' into 1 or 9
-    type_df['sample_status'] = type_df['value'].apply(lambda x: 1 if x in [1, 6, 85, 86] else 9)
+    type_df['sample_status'] = type_df['value'].apply(lambda x: 1 if x in [1, 6, 85, 86] else 0)
 
     return type_df
 

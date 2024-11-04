@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.feature_selection import VarianceThreshold
 
 # Prepare the dataframe to be processed
 def adapt_dataframe(dataframe:pd.DataFrame, type_dataframe:pd.DataFrame) -> pd.DataFrame:
@@ -28,7 +29,18 @@ def optimize_missing_data(dataframe: pd.DataFrame, row_threshold: float, column_
         column_threshold = column_threshold / 100
 
     # Convert to int because thresh expects an integer
-    dataframe = dataframe.dropna(thresh=int(len(dataframe.columns) * column_threshold), axis=0)
-    dataframe = dataframe.dropna(thresh=int(len(dataframe) * row_threshold), axis=1)
+    dataframe = dataframe.dropna(thresh=int(len(dataframe.columns) * row_threshold), axis=0)
+    dataframe = dataframe.dropna(thresh=int(len(dataframe) * column_threshold), axis=1)
 
     return dataframe
+
+# Reduce the given dataframe with VarianceThreshold
+def reduceVT_dataframe(dataframe:pd.DataFrame, thresh:float) -> pd.DataFrame:
+    # Create a selector
+    selector = VarianceThreshold(threshold=thresh)
+
+    # Fit the selector the input dataframe
+    df_reduced = selector.fit_transform(dataframe)
+
+    # The selector returns a numpy.ndarray so we are converting it back as a pd.DataFrame
+    return pd.DataFrame(df_reduced, columns=dataframe.columns[selector.get_support(indices=True)])
