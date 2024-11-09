@@ -1,11 +1,9 @@
-import optuna
 import pandas as pd
-from fontTools.misc.textTools import tostr
 from matplotlib import pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
-from src.machine_learning.cross_validation import params_optimizedBCV
+from src.utils import build_tree
 
 
 def split_data(dataframe: pd.DataFrame, targetColumn:str) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
@@ -31,13 +29,18 @@ def build_XGB_model(X_train:pd.DataFrame, X_test:pd.DataFrame, y_train:pd.Series
     ## New study
     # best_params = params_optimizedBCV(X_train, y_train).best_params
 
-    study = optuna.load_study(study_name="my_study", storage="sqlite:///optimized_study.db")
-    best_params = study.best_params
-    print(best_params)
-    clf_xgb = xgb.XGBClassifier(**best_params, n_jobs=2)
-    clf_xgb.fit(X_train, y_train,
-                eval_set=[(X_test, y_test)],
-                verbose=True)
+    # study = optuna.load_study(study_name="my_study", storage="sqlite:///optimized_study.db")
+    # best_params = study.best_params
+    # print(best_params)
+    # clf_xgb = xgb.XGBClassifier(**best_params, n_jobs=2)
+    # clf_xgb.fit(X_train, y_train,
+    #             eval_set=[(X_test, y_test)],
+    #             verbose=True)
+    # clf_xgb.save_model("xgb_model.json")
+
+    ## Load pre-built model
+    clf_xgb = xgb.XGBClassifier()
+    clf_xgb.load_model("xgb_model.json")
 
     ## Display confusion matrix
     print("Building confusion matrix...")
@@ -52,17 +55,4 @@ def build_XGB_model(X_train:pd.DataFrame, X_test:pd.DataFrame, y_train:pd.Series
     #     print('%s: ' % importance_type, bst.get_score(importance_type=importance_type))
 
     print("Building graph...")
-    node_params = {'shape': 'box',  # Make the nodes fancy
-                   'style': 'filled, rounded',
-                   'fillcolor': '#78cbe'}
-    leaf_params = {'shape': 'box',
-                   'style': 'filled, rounded',
-                   'fillcolor': '#e48038'}
-
-    ## Show the tree
-    # NOTE: num_trees does not indicate the number of trees, but the specific tree
-    graph_data = xgb.to_graphviz(clf_xgb, num_trees=0, size="10,10",
-                                 condition_node_params=node_params,
-                                 leaf_node_params=leaf_params,)
-    graph_data.view(filename='XGBTree_breast_cancer')  # Save as pdf
-    # print(df.head())
+    build_tree(clf_xgb)
