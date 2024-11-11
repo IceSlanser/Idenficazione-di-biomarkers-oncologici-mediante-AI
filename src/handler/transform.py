@@ -3,6 +3,7 @@ from sklearn.feature_selection import VarianceThreshold
 
 # Prepare the dataframe to be processed
 def adapt_dataframe(dataframe:pd.DataFrame, type_dataframe:pd.DataFrame) -> pd.DataFrame:
+    print("Adapting dataframe...")
     # Remove unnecessary rows from the dataframe
     df_filtered = dataframe[~dataframe['name1'].isin(['sample_type', 'sample_site'])]
 
@@ -22,12 +23,7 @@ def adapt_dataframe(dataframe:pd.DataFrame, type_dataframe:pd.DataFrame) -> pd.D
 
 # Rows and columns that do not reach the given thresholds will be removed
 def optimize_missing_data(dataframe: pd.DataFrame, row_threshold: float, column_threshold: float) -> pd.DataFrame:
-    # Check if the thresholds are given as percentages (greater than 1)
-    if row_threshold > 1:
-        row_threshold = row_threshold / 100
-    if column_threshold > 1:
-        column_threshold = column_threshold / 100
-
+    print("Optimizing missing data...")
     # Convert to int because thresh expects an integer
     dataframe = dataframe.dropna(thresh=int(len(dataframe.columns) * row_threshold), axis=0)
     dataframe = dataframe.dropna(thresh=int(len(dataframe) * column_threshold), axis=1)
@@ -36,6 +32,7 @@ def optimize_missing_data(dataframe: pd.DataFrame, row_threshold: float, column_
 
 # Reduce the given dataframe with VarianceThreshold
 def reduceVT_dataframe(dataframe:pd.DataFrame, thresh:float) -> pd.DataFrame:
+    print("Reducing VT data...")
     # Create a selector
     selector = VarianceThreshold(threshold=thresh)
 
