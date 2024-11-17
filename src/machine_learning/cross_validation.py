@@ -16,12 +16,13 @@ def create_objective(X_train:pd.DataFrame, y_train:pd.Series) -> Callable[[optun
             'gamma': trial.suggest_float('gamma', 0, 5),
             'reg_lambda': trial.suggest_float('reg_lambda', 1, 50),
             'scale_pos_weight': trial.suggest_float('scale_pos_weight', 1, 10),
+            'min_child_weight': trial.suggest_float('min_child_weight', 5, 50),
             'seed': 42
         }
 
         # Cross validation with defined params
         model = xgb.XGBClassifier(**params)
-        scores = cross_val_score(model, X_train, y_train, cv=5, scoring='roc_auc', n_jobs=2)  # TODO: cv=5
+        scores = cross_val_score(model, X_train, y_train, cv=5, scoring='roc_auc', n_jobs=1)  # TODO: cv=5
 
         # Return CV's mean scores
         return scores.mean()
@@ -37,8 +38,8 @@ def params_optimizedBCV(X_train:pd.DataFrame, y_train:pd.Series):
 
     # Optimization with 50 trials using Optuna
     print("Staring Optuna study...")
-    study = optuna.create_study(direction='maximize', storage="sqlite:///optimized_study.db",
+    study = optuna.create_study(direction='maximize', storage="sqlite:///../test/backups/optimized_study.db",
                                 study_name="my_study", load_if_exists=True)
-    study.optimize(objective, n_trials=50, n_jobs=2)  # TODO: n_trials=50
+    study.optimize(objective, n_trials=50 - len(study.trials), n_jobs=1)  # TODO: n_trials=50
 
     return study
