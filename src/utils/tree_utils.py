@@ -23,7 +23,7 @@ def build_tree(clf_xgb: XGBClassifier) -> None:
 
     # Save and view the decision tree
     new_graph_data = Source('\n'.join(updated_source))
-    new_graph_data.view(filename='XGBTree_with_custom_info')
+    new_graph_data.view(filename='../test/backups/XGBTree_with_custom_info')
 
 
 def get_node_info(nodes: list) -> dict:
