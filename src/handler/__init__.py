@@ -1,6 +1,6 @@
 from .extract import extract_type, extract_site
 from .load import load_csv
-from .transform import adapt_dataframe, optimize_missing_data, reduceVT_dataframe
+from .transform import adapt_dataframe, optimize_missing_data, reduceVT_dataframe, classify_not_defined_with_kmeans
 
 __all__ = [
     'extract_type',
@@ -8,5 +8,6 @@ __all__ = [
     'load_csv',
     'adapt_dataframe',
     'optimize_missing_data',
-    'reduceVT_dataframe'
+    'reduceVT_dataframe',
+    'classify_not_defined_with_kmeans'
 ]
