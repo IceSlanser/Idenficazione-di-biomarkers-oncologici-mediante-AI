@@ -1,7 +1,7 @@
 # Identificazione di Biomarcatori Oncologici mediante AI
 
 ## Overview
-**Identificazione di Biomarcatori Oncologici mediante AI** aims to apply Artificial Intelligence and Machine Learning techniques to identify potential biomarkers in favor of oncological diseases diagnose. By combining data preprocessing, and classification modeling via XGBoost this project provides an end-to-end workflow for biomarker discovery.
+**Identificazione di Biomarcatori Oncologici mediante AI** aims to apply Artificial Intelligence and Machine Learning techniques to identify potential biomarkers in favor of oncological disease diagnosis. By combining data preprocessing, and classification modeling via XGBoost this project provides an end-to-end workflow for biomarker discovery.
 
 ### Disclaimer
 This project is for research purposes and does not constitute medical advice or diagnostics. Any results must be validated by qualified medical personnel and supported by further experimental analyses.
